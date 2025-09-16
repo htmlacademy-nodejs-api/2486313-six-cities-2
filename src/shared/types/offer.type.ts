@@ -1,22 +1,24 @@
-import { Facilities } from './facilities.type.js';
+import { Facility } from './facility.type.js';
 import { User } from './user.type.js';
 import { OfferCoordinates } from './offer-coordinates.type.js';
+import { CityName } from './city-name.type.js';
+import { HouseType } from './house.type.js';
 
 export type Offer = {
   name: string;
   description: string;
   postDate: Date;
-  city: string;
+  city: CityName;
   previewImage: string;
   photoHouse: string[];
   premium: boolean;
   favorites: boolean;
   rating: number;
-  typeHouse: string;
+  typeHouse: HouseType;
   counterRoom: number;
   counterGuest: number;
   priceRental: number;
-  facilities: Facilities[];
+  facilities: Facility[];
   user: User;
   counterComments: number;
   offerCoordinates: OfferCoordinates;

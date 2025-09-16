@@ -3,7 +3,7 @@
 export type User = {
   name: string;
   email: string;
-  userAvatar: string;
+  avatar: string;
   password: string;
-  userType: string;
+  type: 'обычный' | 'pro';
 }

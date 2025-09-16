@@ -1,6 +1,6 @@
 import { FileReader } from './file-reader.interface.js';
 import { readFileSync } from 'node:fs';
-import { Offer } from '../../index.js';
+import { Offer, User, OfferCoordinates, CityName, HouseType, Facility } from '../../index.js';
 
 export class TSVFileReader implements FileReader {
   private rawData = '';
@@ -22,13 +22,10 @@ export class TSVFileReader implements FileReader {
       .split('\n')
       .filter((row) => row.trim().length > 0)
       .map((line) => line.split('\t'))
-      .map(([name, description, createdDate, city, previewImage,
-        photoHouse, premium, favorites, rating, typeHouse,
-        counterRoom, counterGuest, priceRental, facilities,
-        user, counterComments, offerCoordinates]) => ({
+      .map(([
         name,
         description,
-        postDate: new Date(createdDate),
+        createdDate,
         city,
         previewImage,
         photoHouse,
@@ -40,9 +37,48 @@ export class TSVFileReader implements FileReader {
         counterGuest,
         priceRental,
         facilities,
-        user,
+        userName,
+        userEmail,
+        userAvatar,
+        userPassword,
+        userType,
         counterComments,
-        offerCoordinates
-      }));
+        latitude,
+        longitude
+      ]) => {
+
+        const user: User = {
+          name: userName,
+          email: userEmail,
+          avatar: userAvatar,
+          password: userPassword,
+          type: userType as 'обычный' | 'pro'
+        };
+
+        const offerCoordinates: OfferCoordinates = {
+          latitude: Number.parseFloat(latitude),
+          longitude: Number.parseFloat(longitude)
+        };
+
+        return {
+          name,
+          description,
+          postDate: new Date(createdDate),
+          city: city as CityName,
+          previewImage,
+          photoHouse: photoHouse.split(';').map((photo) => photo.trim()),
+          premium: premium === 'true',
+          favorites: favorites === 'true',
+          rating: Number.parseFloat(rating),
+          typeHouse: typeHouse as HouseType, // Приводим к enum
+          counterRoom: Number.parseInt(counterRoom, 10),
+          counterGuest: Number.parseInt(counterGuest, 10),
+          priceRental: Number.parseInt(priceRental, 10),
+          facilities: facilities.split(';').map((facility) => facility as Facility),
+          user,
+          counterComments: Number.parseInt(counterComments, 10),
+          offerCoordinates
+        };
+      });
   }
 }
